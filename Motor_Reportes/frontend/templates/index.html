@@ -54,22 +54,11 @@
     </div>
 
     <div id="seccion-notificacion" style="margin-top: 30px; border: 1px solid #ccc; padding: 20px; border-radius: 8px;">
-        <h3>🚀 Alerta Inmediata: Notificar al Encargado de TI</h3>
-
-        <div style="margin-bottom: 15px; padding: 15px; background-color: #0f172a; border-left: 4px solid #38bdf8; border-radius: 4px;">
-            <h4 style="margin-top: 0; color: #38bdf8;">🔐 Credenciales de Autorización (Emisor)</h4>
-            <div style="margin-bottom: 10px;">
-                <label style="color: #cbd5e1;">Tu Correo Gmail (Emisor):</label><br>
-                <input type="email" id="email_emisor" placeholder="tu_correo@gmail.com" style="width: 100%; padding: 8px; margin-top: 5px;">
-            </div>
-            <div style="margin-bottom: 10px;">
-                <label style="color: #cbd5e1;">Tu Token de Seguridad (16 dígitos):</label><br>
-                <input type="password" id="password_emisor" placeholder="••••••••••••••••" style="width: 100%; padding: 8px; margin-top: 5px;">
-            </div>
-        </div>
+        <h3>Alerta Inmediata Automatizada</h3>
+        <p style="color: #64748b; font-size: 0.9em; margin-top: 0;">El sistema utilizará su cuenta de servicio de contingencia para notificar al equipo de respuestas.</p>
 
         <div style="margin-bottom: 10px;">
-            <label>Correo del Encargado (Destino):</label><br>
+            <label>Correo del Encargado de TI (Destino):</label><br>
             <input type="email" id="email_ti" placeholder="ejemplo_ti@empresa.com" style="width: 100%; padding: 8px;">
         </div>
         <div style="margin-bottom: 10px;">
@@ -82,7 +71,7 @@
         </div>
 
         <button id="btnNotificar" style="background-color: #ef4444; color: white; padding: 10px 15px; border: none; border-radius: 4px; cursor: pointer; font-weight: bold;">
-            Autenticar y Enviar Alerta por Gmail
+            Disparar Alerta por Servidor Central
         </button>
         <p id="status_notificacion" style="margin-top: 10px; font-weight: bold;"></p>
     </div>

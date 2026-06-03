@@ -6,9 +6,13 @@ from email.header import Header
 
 class GeneradorMitigacion:
     def __init__(self):
-        # Configuraciones globales de red (Las credenciales ahora son dinámicas)
+        # Configuraciones globales de red
         self.smtp_server = "smtp.gmail.com"
         self.smtp_port = 587
+
+        # 🔐 CUENTA DE SERVICIO DEL SISTEMA (Credenciales Ocultas e Internas)
+        self.correo_sistema = "alaniscris3005@gmail.com"
+        self.password_sistema = "hjexfbrajiysyltv"  # Token escrito sin espacios
 
     def generar_acciones_automatizadas(self, datos_estructurados, resultado_semantico):
         """Genera acciones técnicas automatizadas extrayendo datos de forma dinámica (OE5)"""
@@ -70,16 +74,16 @@ class GeneradorMitigacion:
 
         return lista_acciones
 
-    def enviar_notificacion_gmail(self, correo_emisor, password_emisor, correo_destino, asunto, mensaje_texto):
+    def enviar_notificacion_gmail(self, correo_destino, asunto, mensaje_texto):
         """
         Envía un correo electrónico automatizado utilizando el SMTP de Gmail.
-        Las credenciales se inyectan en tiempo real por el usuario final.
+        Utiliza de manera automática las credenciales del sistema central.
         """
         try:
             msg = MIMEMultipart()
 
-            # Formateo seguro para la red
-            msg['From'] = Header(correo_emisor, 'utf-8')
+            # Formateo seguro para la red usando el correo del SISTEMA
+            msg['From'] = Header(self.correo_sistema, 'utf-8')
             msg['To'] = Header(correo_destino, 'utf-8')
             msg['Subject'] = Header(asunto, 'utf-8')
 
@@ -89,13 +93,12 @@ class GeneradorMitigacion:
             server = smtplib.SMTP(self.smtp_server, self.smtp_port)
             server.starttls()
 
-            # 🌟 AUTENTICACIÓN DINÁMICA: Inicia sesión con lo ingresado en pantalla
-            server.login(correo_emisor, password_emisor)
+            # 🌟 AUTENTICACIÓN INVISIBLE: Inicia sesión usando tus datos guardados arriba
+            server.login(self.correo_sistema, self.password_sistema)
 
-            server.sendmail(correo_emisor, correo_destino, msg.as_bytes())
+            server.sendmail(self.correo_sistema, correo_destino, msg.as_bytes())
             server.quit()
 
             return {"status": "success", "message": "Notificación enviada con éxito al encargado de TI."}
         except Exception as e:
-            return {"status": "error",
-                    "message": f"Autenticación fallida o error de envío: Verifique el Token y el correo."}
+            return {"status": "error", "message": f"Error interno de envío: {str(e)}"}

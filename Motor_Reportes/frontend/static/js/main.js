@@ -21,9 +21,7 @@ async function procesarMotor() {
 
         const resultado = await respuesta.json();
 
-        // ======================================================================
         // REFORMA FASE 1: Renderizado de Etiquetas (Tokens)
-        // ======================================================================
         const contenedorEtiquetas = document.getElementById("outLexer");
         contenedorEtiquetas.innerHTML = "";
 
@@ -38,17 +36,13 @@ async function procesarMotor() {
             });
         }
 
-        // ======================================================================
         // REFORMA FASE 2: Tabla Completamente Dinámica y Adaptativa
-        // ======================================================================
         const contenedorTabla = document.getElementById("outParser");
         const estructuraSintactica = resultado.estructura;
 
-        // Si el texto fue rechazado por el filtro ("Hola"), limpiamos la tabla
         if (!estructuraSintactica.tiene_datos_validos) {
             contenedorTabla.innerHTML = '<span class="placeholder-texto">No hay datos estructurados disponibles para esta entrada.</span>';
         } else {
-            // Construimos dinámicamente las filas de los componentes encontrados
             let filasComponentesHTML = "";
             estructuraSintactica.componentes_encontrados.forEach(item => {
                 filasComponentesHTML += `
@@ -59,7 +53,6 @@ async function procesarMotor() {
                 `;
             });
 
-            // Construimos dinámicamente las filas de las relaciones encontradas (CFG)
             let filasRelacionesHTML = "";
             if (estructuraSintactica.relaciones_contextuales.length === 0) {
                 filasRelacionesHTML = `
@@ -72,14 +65,13 @@ async function procesarMotor() {
                 estructuraSintactica.relaciones_contextuales.forEach(relacion => {
                     filasRelacionesHTML += `
                         <tr>
-                            <td><strong style="color: #f59e0b;">🔄 ${relacion.tipo_relacion}</strong></td>
+                            <td><strong style="color: #f59e0b;"> ${relacion.tipo_relacion}</strong></td>
                             <td style="color: #e2e8f0;">${relacion.descripcion}</td>
                         </tr>
                     `;
                 });
             }
 
-            // Inyectamos el consolidado limpio directamente en la interfaz
             contenedorTabla.innerHTML = `
                 <table class="tabla-sintactica">
                     <thead>
@@ -96,9 +88,7 @@ async function procesarMotor() {
             `;
         }
 
-        // ======================================================================
         // RENDERIZADO DE LAS FASES SEMÁNTICA Y SALIDA AUTOMATIZADA
-        // ======================================================================
         document.getElementById("lblRiesgo").textContent = resultado.analisis_semantico.nivel_riesgo;
         document.getElementById("lblPrioridad").textContent = resultado.analisis_semantico.nivel_prioridad;
         document.getElementById("lblRegla").textContent = resultado.analisis_semantico.regla_aplicada;
@@ -122,28 +112,23 @@ async function procesarMotor() {
 }
 
 // ======================================================================
-// ENLACE INTERACTIVO: CAPTURA DINÁMICA DE CREDENCIALES Y ENVÍO DE CORREO
+// ENLACE INTERACTIVO: ENVÍO DE CORREO AUTOMATIZADO POR EL SISTEMA
 // ======================================================================
 document.getElementById("btnNotificar").addEventListener("click", async () => {
-    // 1. Capturamos credenciales dinámicas
-    const correo_emisor = document.getElementById("email_emisor").value;
-    const password_emisor = document.getElementById("password_emisor").value;
-
-    // 2. Capturamos información del incidente
+    // Solo capturamos información del incidente, el usuario final no hace login
     const correo = document.getElementById("email_ti").value;
     const asunto = document.getElementById("asunto_ti").value;
     const mensaje = document.getElementById("mensaje_ti").value;
     const statusTxt = document.getElementById("status_notificacion");
 
-    // Validar campos vacíos en el Frontend
-    if (!correo_emisor.trim() || !password_emisor.trim() || !correo.trim() || !asunto.trim() || !mensaje.trim()) {
+    if (!correo.trim() || !asunto.trim() || !mensaje.trim()) {
         statusTxt.style.color = "#ef4444";
-        statusTxt.innerText = "Por favor, completa tus credenciales y todos los campos del reporte.";
+        statusTxt.innerText = "Por favor, completa el destinatario, asunto y mensaje del reporte.";
         return;
     }
 
     statusTxt.style.color = "#38bdf8";
-    statusTxt.innerText = "Autenticando de forma segura y enviando alerta...";
+    statusTxt.innerText = "El Servidor Central está enviando la alerta segura...";
 
     try {
         const response = await fetch("/notificar", {
@@ -151,18 +136,17 @@ document.getElementById("btnNotificar").addEventListener("click", async () => {
             headers: {
                 "Content-Type": "application/json"
             },
-            // Mandamos los 5 datos al servidor
-            body: JSON.stringify({ correo_emisor, password_emisor, correo, asunto, mensaje })
+            body: JSON.stringify({ correo, asunto, mensaje })
         });
 
         const data = await response.json();
 
         if (data.status === "success") {
             statusTxt.style.color = "#10b981";
-            statusTxt.innerText = "¡Notificación enviada con éxito al encargado de TI!";
+            statusTxt.innerText = "¡Notificación enviada con éxito desde el Servidor Central!";
         } else {
             statusTxt.style.color = "#ef4444";
-            statusTxt.innerText = "Error: " + data.message;
+            statusTxt.innerText = "Error del Sistema: " + data.message;
         }
     } catch (error) {
         console.error(error);
